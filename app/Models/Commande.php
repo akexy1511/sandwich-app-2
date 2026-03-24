@@ -43,4 +43,64 @@ class Commande
 
         return $now < $deadline;
     }
+
+    public static function create($userId, $sandwich, $crudites, $jours)
+    {
+        $db = Database::db();
+        $sql = "
+            INSERT INTO commandes (jour, id_utilisateur, crudites, nom, date_de_commande)
+            VALUES (:jour, :uid, :crudites, :nom, :date_cmd)
+        ";
+
+        $stmt = $db->prepare($sql);
+
+        $inserted = 0;
+        $skipped  = 0;
+
+        foreach ($jours as $raw) {
+
+            if (!str_contains($raw, "\n")) {
+                $skipped++;
+                continue;
+            }
+
+            list($jour, $date) = explode("\n", $raw);
+
+            $d = \DateTime::createFromFormat('d/m/Y', trim($date));
+            if (!$d) {
+                $skipped++;
+                continue;
+            }
+
+            $dateSQL = $d->format('Y-m-d');
+
+            try {
+                $stmt->execute([
+                    ':jour'      => trim($jour),
+                    ':uid'       => $userId,
+                    ':crudites'  => $crudites,
+                    ':nom'       => $sandwich,
+                    ':date_cmd'  => $dateSQL,
+                ]);
+
+                $inserted++;
+
+            } catch (\PDOException $e) {
+
+                // doublon (contrainte UNIQUE)
+                if ($e->getCode() === '23000') {
+                    $skipped++;
+                    continue;
+                }
+
+                error_log("Erreur insertion commande : " . $e->getMessage());
+                $skipped++;
+            }
+        }
+
+        return [
+            'inserted' => $inserted,
+            'skipped'  => $skipped
+        ];
+    }
 }

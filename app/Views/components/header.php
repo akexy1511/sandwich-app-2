@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="/assets/css/style.css?v=<?= time() ?>">
 </head>
 <body>
-
+<?php if (!empty($_SESSION['message'])): ?>
+<div class="alert alert-info" style="margin: 20px;">
+    <?= htmlspecialchars($_SESSION['message']) ?>
+</div>
+<?php unset($_SESSION['message']); ?>
+<?php endif; ?>
 <nav class="app-header">
     <div class="app-logo">
         <div class="app-logo-icon">🥖</div>
