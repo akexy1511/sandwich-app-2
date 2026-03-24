@@ -31,5 +31,21 @@ $router->get('/qr', 'QRController@index');
 $router->get('/probleme', 'ReportController@index');
 $router->post('/probleme', 'ReportController@send');
 
+// DASHBOARD ADMIN
+$router->get('/admin', 'AdminController@index');
+
+// GESTION UTILISATEURS
+$router->get('/admin/users', 'AdminController@users');
+$router->post('/admin/users/delete', 'AdminController@deleteUser');
+
+// GESTION COMMANDES
+$router->get('/admin/commandes', 'AdminController@commandes');
+$router->get('/admin/sandwichs', 'AdminController@sandwichs');
+$router->post('/admin/sandwichs/update', 'AdminController@updateSandwich');
+
+// GESTION SANDWICHS
+$router->get('/admin/sandwichs', 'AdminController@sandwichs');
+$router->post('/admin/sandwichs/update', 'AdminController@updateSandwich');
+
 // Lancement du routeur
 $router->dispatch();
