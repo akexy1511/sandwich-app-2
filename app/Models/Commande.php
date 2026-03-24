@@ -103,4 +103,43 @@ class Commande
             'skipped'  => $skipped
         ];
     }
+    public static function delete($commandeId, $userId)
+    {
+        $db = Database::db();
+
+        $sql = "
+            DELETE FROM commandes 
+            WHERE id_commande = :id 
+            AND id_utilisateur = :uid
+        ";
+
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute([
+            'id'  => $commandeId,
+            'uid' => $userId
+        ]);
+    }
+    public static function update($commandeId, $userId, $sandwich, $crudites)
+    {
+        $db = Database::db();
+
+        $sql = "
+            UPDATE commandes
+            SET nom = :nom,
+                crudites = :crudites
+            WHERE id_commande = :id
+            AND id_utilisateur = :uid
+        ";
+
+        $stmt = $db->prepare($sql);
+
+        return $stmt->execute([
+            'nom'      => $sandwich,
+            'crudites' => $crudites,
+            'id'       => $commandeId,
+            'uid'      => $userId
+        ]);
+    }
+    
 }

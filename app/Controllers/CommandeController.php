@@ -30,4 +30,93 @@ class CommandeController extends Controller
             'sandwiches' => $sandwiches
         ]);
     }
+    public function delete()
+    {
+        if (empty($_SESSION['user_id'])) {
+            return header("Location: /login");
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return header("Location: /commandes");
+        }
+
+        $commandeId = intval($_POST['id_commande'] ?? 0);
+
+        if (!$commandeId) {
+            $_SESSION['message'] = "Commande invalide.";
+            return header("Location: /commandes");
+        }
+
+        \App\Models\Commande::delete($commandeId, $_SESSION['user_id']);
+
+        $_SESSION['message'] = "Commande supprimée.";
+        return header("Location: /commandes");
+    }
+
+    public function edit($idCommande)
+    {
+        if (empty($_SESSION['user_id'])) {
+            return header("Location: /login");
+        }
+
+        $db = \App\Core\Database::db();
+
+        // Charger la commande
+        $stmt = $db->prepare("
+            SELECT * FROM commandes 
+            WHERE id_commande = :id 
+            AND id_utilisateur = :uid
+        ");
+
+        $stmt->execute([
+            'id'  => $idCommande,
+            'uid' => $_SESSION['user_id']
+        ]);
+
+        $commande = $stmt->fetch();
+
+        if (!$commande) {
+            $_SESSION['message'] = "Commande introuvable.";
+            return header("Location: /commandes");
+        }
+
+        // Charger sandwiches.json
+        $sandwiches = \App\Models\Sandwich::all();
+
+        $this->view('commandes/edit', [
+            'commande'   => $commande,
+            'sandwiches' => $sandwiches
+        ]);
+    }
+
+    public function update()
+    {
+        if (empty($_SESSION['user_id'])) {
+            return header("Location: /login");
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return header("Location: /commandes");
+        }
+
+        $idCommande = intval($_POST['id_commande'] ?? 0);
+        $sandwich   = trim($_POST['sandwich'] ?? '');
+        $crudites   = ($_POST['crudites'] ?? '') === 'sans' ? 'sans' : 'avec';
+
+        if (!$idCommande || !$sandwich) {
+            $_SESSION['message'] = "Modification invalide.";
+            return header("Location: /commandes");
+        }
+
+        \App\Models\Commande::update(
+            $idCommande,
+            $_SESSION['user_id'],
+            $sandwich,
+            $crudites
+        );
+
+        $_SESSION['message'] = "Commande modifiée avec succès.";
+        return header("Location: /commandes");
+    }
+
 }

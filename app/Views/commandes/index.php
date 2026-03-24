@@ -71,7 +71,12 @@
 
                             <?php if ($isEditable): ?>
                                 /crud.php?action=modifier&id_commande=<?= $cmd['id_commande'] ?>" class="btn btn-ghost btn-sm">Modifier</a>
-                                /crud.php?action=delete&id_commande=<?= $cmd['id_commande'] ?>" class="btn btn-danger btn-sm">Supprimer</a>
+                                <form action="/commandes/delete" method="POST" style="display:inline;">
+                                    <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cette commande ?')">
+                                        Supprimer
+                                    </button>
+                                </form>
                             <?php else: ?>
                                 <span class="badge badge-muted">Verrouillée</span>
                             <?php endif; ?>
