@@ -3,7 +3,7 @@
 <?php include 'includes/auth.php'; ?>
 
 <?php
-if ($_SESSION['email'] !== "admin@cepes.be") {
+if (intval($_SESSION['role'] ?? 1) !== 0) {
     echo "<p>Accès refusé.</p>";
     include 'includes/footer.php';
     exit;

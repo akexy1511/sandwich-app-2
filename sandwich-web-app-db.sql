@@ -94,6 +94,20 @@ CREATE TABLE `utilisateur` (
   `email` VARCHAR(100) NOT NULL,
   `login` VARCHAR(50) DEFAULT NULL,
   `password` VARCHAR(255) DEFAULT NULL,
+  `role` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB;
+-- role 0 = admin, 1 = user
+
+-- Table contact_messages
+CREATE TABLE `contact_messages` (
+  `id_message` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `subject` VARCHAR(50) NOT NULL,
+  `message` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `status` ENUM('unread', 'read', 'replied') DEFAULT 'unread',
+  PRIMARY KEY (`id_message`)
 ) ENGINE=InnoDB;

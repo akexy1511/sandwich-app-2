@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['user_id'] = $user['id_utilisateur'];
     $_SESSION['username'] = $user['login'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['role'] = isset($user['role']) ? intval($user['role']) : 1;
 
     header("Location: index.php");
     exit;

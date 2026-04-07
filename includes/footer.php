@@ -1,5 +1,8 @@
 </div>
 <footer class="app-footer">
+    <div style="display: flex; justify-content: center; gap: var(--sp-xl); margin-bottom: var(--sp-md); flex-wrap: wrap;">
+        <a href="faq.php" style="color: var(--c-footer-text); text-decoration: none; font-weight: 500;">FAQ</a>
+    </div>
     © CEPES 2026 — Cyril Libouton & Alexy Viatour
 </footer>
 

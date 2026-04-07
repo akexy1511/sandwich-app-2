@@ -45,6 +45,12 @@ if (session_status() === PHP_SESSION_NONE) {
 
         <?php else: ?>
 
+            <?php if (intval($_SESSION['role'] ?? 1) === 0): ?>
+                <a href="admin-commandes.php" class="btn btn-secondary">
+                    Liste des commandes
+                </a>
+            <?php endif; ?>
+
             <a href="commandes.php" class="btn btn-secondary">
                 Mes commandes
             </a>
