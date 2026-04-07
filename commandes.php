@@ -69,14 +69,14 @@ $commandes = $stmt->get_result();
 
                         <td class="actions-cell">
 
-                            commande-modifier.php?id=<?= $c['id_commande'] ?>" class="btn btn-ghost btn-sm">Modifier</a>
+                            <a href="commande-modifier.php?id=<?= $c['id_commande'] ?>" class="btn btn-ghost btn-sm">Modifier</a>
 
-                            commande-supprimer.php?id=<?= $c['id_commande'] ?>"
+                            <a href="commande-supprimer.php?id=<?= $c['id_commande'] ?>"
                                onclick="return confirm('Supprimer cette commande ?');"
                                class="btn btn-danger btn-sm">Supprimer</a>
 
                             <?php if (!$c['is_paid']): ?>
-                                paiement.php?id=<?= $c['id_commande'] ?>" class="btn btn-success btn-sm">Payer</a>
+                                <a href="paiement.php?id=<?= $c['id_commande'] ?>" class="btn btn-success btn-sm">Payer</a>
                             <?php endif; ?>
 
                         </td>

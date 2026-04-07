@@ -87,12 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button class="btn btn-primary" style="width:100%; margin-top:10px;">Créer mon compte</button>
 
             </form>
+            <div class="divider">ou</div>
+
+            <a href="index.php" style="display: block; text-align: center; color: var(--c-text); margin-top: var(--sp-md);">Continuer en tant qu'invité</a>
 
         </div>
 
         <div class="auth-footer">
-            Déjà un compte ?  
-            login.php>Se connecter</a>
+            Vous avez déjà un compte ?
+            <a href="login.php">Se connecter</a>
         </div>
 
     </div>

@@ -28,8 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: commandes.php");
     exit;
 }
-``
+?>
 
+<?php
 // Récupération commande
 $stmt = $conn->prepare("SELECT * FROM commandes WHERE id_commande = ? AND id_utilisateur = ?");
 $stmt->bind_param("ii", $id, $user_id);
@@ -53,7 +54,7 @@ $sandwiches = json_decode(file_get_contents("sandwiches.json"), true);
 <div class="detail-wrap">
     <div class="detail-main">
 
-        commande-modifier.php?id=<?= $id ?>" method="POST">
+        <form action="commande-modifier.php?id=<?= $id ?>" method="POST">
 
             <div class="option-group">
                 <div class="option-label">Sandwich</div>
@@ -90,7 +91,7 @@ $sandwiches = json_decode(file_get_contents("sandwiches.json"), true);
             <button class="btn btn-primary" style="width:100%;">Enregistrer</button>
         </form>
 
-        commandes.php
+        <a href="commandes.php">
             <button class="btn btn-ghost" style="width:100%; margin-top:10px;">Retour</button>
         </a>
 

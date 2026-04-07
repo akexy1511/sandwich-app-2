@@ -45,7 +45,7 @@ $price = $data[$key]['price'] ?? 5.0;
         </div>
     </div>
 
-    paiement-process.php" method="POST">
+    <form action="paiement-process.php" method="POST">
 
         <input type="hidden" name="id_commande" value="<?= $id ?>">
 

@@ -9,20 +9,32 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <title>Sandwich</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        // Initialiser le thème au chargement de la page
+        (function() {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
 
 <nav class="app-header">
-    <div class="app-logo">
+    <a href="index.php" class="app-logo" style="text-decoration: none; color: inherit;">
         <div class="app-logo-icon">🥖</div>
         Sandwich
-    </div>
+    </a>
 
     <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle" title="Mode sombre/clair">
+            <span class="theme-toggle-icon">🌙</span>
+        </button>
+
         <?php if (!isset($_SESSION['user_id'])): ?>
 
-            <a href="signup.php" class="btn btn-secondary"
-               style="background:#ffffff; color:var(--c-brand); border:1px solid var(--c-brand);">
+            <a href="signup.php" class="btn btn-outline-primary">
                Créer un compte
             </a>
 

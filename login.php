@@ -77,13 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="divider">ou</div>
 
-            index.phpContinuer en tant qu'invité</a>
+            <a href="index.php" style="display: block; text-align: center; color: var(--c-text); margin-top: var(--sp-md);">Continuer en tant qu'invité</a>
 
         </div>
 
         <div class="auth-footer">
             Pas encore de compte ?  
-            signup.php>S'inscrire</a>
+            <a href="signup.php">S'inscrire</a>
         </div>
 
     </div>

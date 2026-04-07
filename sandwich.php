@@ -23,7 +23,7 @@ if (!isset($sandwiches[$name])) {
 $sandwich = $sandwiches[$name];
 
 // Gestion des jours disponibles
-$joursSem = ["Lundi", "Mardi", "Jeudi", "Vendredi"];
+$joursSem = ['Lundi' => 'Monday', 'Mardi' => 'Tuesday', 'Mercredi' => 'Wednesday', 'Jeudi' => 'Thursday', 'Vendredi' => 'Friday'];
 $aujourdhui = new DateTime();
 $limit_heure = new DateTime("11:20");
 
@@ -37,21 +37,25 @@ if (($weekday == 5 && $aujourdhui >= new DateTime("today 16:00")) || $weekday >=
 
 $liste_jours = [];
 
-foreach ($joursSem as $jNom) {
+foreach ($joursSem as $jNomFr => $jNomEn) {
     $d = clone $aujourdhui;
 
     if ($nextWeekMode) {
-        $d->modify("next week $jNom");
+        $d->modify("next week $jNomEn");
         $disabled = false;
     } else {
-        $d->modify("this week $jNom");
+        $d->modify("this week $jNomEn");
 
         $disabled = ($d < $aujourdhui ||
                     ($d->format("Y-m-d") == $aujourdhui->format("Y-m-d") && $aujourdhui > $limit_heure));
     }
 
+    // Ajout de débogage pour vérifier les valeurs des variables
+    error_log("Jour en français : $jNomFr, Jour en anglais : $jNomEn");
+    error_log("Date calculée : " . $d->format("Y-m-d"));
+
     $liste_jours[] = [
-        "label" => $jNom,
+        "label" => $jNomFr,
         "date"  => $d->format("d/m/Y"),
         "disabled" => $disabled
     ];
@@ -74,7 +78,7 @@ foreach ($joursSem as $jNom) {
             <?php endforeach; ?>
         </div>
 
-        /commande-creer.php" method="POST">
+        <form action="commande-creer.php" method="POST">
 
             <input type="hidden" name="sandwich" value="<?= ucfirst($name) ?>">
 
@@ -126,7 +130,7 @@ foreach ($joursSem as $jNom) {
 
         </form>
 
-        commandes.php
+        <a href="commandes.php">
             <button class="btn btn-ghost" style="width:100%; margin-top:12px;">Annuler</button>
         </a>
 
