@@ -37,7 +37,8 @@ L'objectif principal est de simplifier le processus de commande de repas, en per
 - **Base de données** : MySQL (fichier SQL fourni : `sandwich-web-app-db.sql`)
 - **Frontend** : HTML, CSS (fichiers dans `assets/css/`)
 - **JavaScript** : Pour interactions dynamiques (dans `public/assets/js/`)
-- **Bibliothèques** : Utilisation de bibliothèques pour QR codes (bacon-qr-code, endroid/qr-code)
+- **Paiements** : Stripe API pour traitement sécurisé des paiements par carte
+- **Bibliothèques** : Utilisation de bibliothèques pour QR codes (bacon-qr-code, endroid/qr-code) et Stripe PHP SDK
 - **Serveur** : Compatible avec XAMPP ou similaires pour développement local
 
 ---
@@ -62,7 +63,16 @@ L'objectif principal est de simplifier le processus de commande de repas, en per
 4. **Configurer les sandwichs** :
    - Les données des sandwichs sont stockées dans `sandwiches.json`. Modifiez ce fichier pour ajouter ou changer les sandwichs disponibles.
 
-5. **Démarrer le serveur** :
+5. **Configurer Stripe pour les paiements** :
+   - Créer un compte sur [Stripe](https://stripe.com).
+   - Dans le tableau de bord Stripe, aller dans "Developers" > "API keys".
+   - Copier la clé publique (Publishable key) et la clé secrète (Secret key) du mode test.
+   - Modifier `includes/stripe_config.php` et remplacer :
+     - `STRIPE_PUBLISHABLE_KEY` par votre clé publique
+     - `STRIPE_SECRET_KEY` par votre clé secrète
+   - Pour la production, changer `STRIPE_MODE` à 'live' et utiliser les clés de production.
+
+6. **Démarrer le serveur** :
    - Lancer XAMPP et accéder à l'application via `http://localhost/sandwich-app-2`.
 
 ### Configuration supplémentaire

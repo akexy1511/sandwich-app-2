@@ -1,6 +1,7 @@
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/database.php'; ?>
 <?php include 'includes/auth.php'; ?>
+<?php include 'includes/stripe_config.php'; ?>
 
 <?php
 if (!isset($_GET['id'])) {
@@ -27,6 +28,48 @@ if (!$order) {
 $data = json_decode(file_get_contents("sandwiches.json"), true);
 $key = strtolower($order['nom']);
 $price = $data[$key]['price'] ?? 5.0;
+
+// Si paiement Stripe sélectionné, créer session Stripe Checkout
+if (isset($_POST['payment_method']) && $_POST['payment_method'] === 'Stripe') {
+    require_once 'vendor/autoload.php';
+
+    \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+
+    try {
+        $checkout_session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'Sandwich ' . $order['nom'],
+                        'description' => 'Commande du ' . $order['jour'] . ' - Crudités: ' . $order['crudites'],
+                    ],
+                    'unit_amount' => intval($price * 100), // Montant en centimes
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => STRIPE_SUCCESS_URL . '?session_id={CHECKOUT_SESSION_ID}&order_id=' . $id,
+            'cancel_url' => STRIPE_CANCEL_URL . '?id=' . $id,
+            'metadata' => [
+                'order_id' => $id,
+                'user_id' => $user_id,
+            ],
+        ]);
+
+        header("Location: " . $checkout_session->url);
+        exit;
+    } catch (Exception $e) {
+        $_SESSION['message'] = "Erreur lors de la création du paiement: " . $e->getMessage();
+        header("Location: paiement.php?id=" . $id);
+        exit;
+    }
+} elseif (isset($_POST['payment_method']) && $_POST['payment_method'] !== 'Stripe') {
+    // Pour les autres méthodes de paiement, rediriger vers paiement-process.php
+    header("Location: paiement-process.php");
+    exit;
+}
 ?>
 
 <div class="page-header">
@@ -45,7 +88,7 @@ $price = $data[$key]['price'] ?? 5.0;
         </div>
     </div>
 
-    <form action="paiement-process.php" method="POST">
+    <form id="paymentForm" action="paiement.php?id=<?= $id ?>" method="POST">
 
         <input type="hidden" name="id_commande" value="<?= $id ?>">
 
@@ -55,30 +98,17 @@ $price = $data[$key]['price'] ?? 5.0;
                 <option value="">Sélectionnez...</option>
                 <option value="Paypal">PayPal</option>
                 <option value="Cash">Espèces</option>
-                <option value="Stripe">Stripe</option>
+                <option value="Stripe">Carte bancaire (Stripe)</option>
             </select>
         </div>
 
         <div id="cardzone" style="display:none;">
-            <h4>Détails carte :</h4>
-
-            <div class="form-group">
-                <label>Numéro</label>
-                <input type="text" class="form-control" name="card_number">
-            </div>
-
-            <div class="form-group">
-                <label>Expiration</label>
-                <input type="text" class="form-control" name="expiry_date" placeholder="MM/YY">
-            </div>
-
-            <div class="form-group">
-                <label>CVV</label>
-                <input type="text" class="form-control" name="cvv">
+            <div class="alert alert-info">
+                <p>Vous allez être redirigé vers Stripe pour effectuer le paiement en toute sécurité.</p>
             </div>
         </div>
 
-        <button class="btn btn-primary" style="margin-top:20px; width:100%;">Payer</button>
+        <button type="submit" class="btn btn-primary" style="margin-top:20px; width:100%;">Procéder au paiement</button>
     </form>
 
 </div>
@@ -86,7 +116,7 @@ $price = $data[$key]['price'] ?? 5.0;
 <script>
 document.getElementById('pmethod').addEventListener('change', function() {
     document.getElementById('cardzone').style.display =
-        this.value === 'card' ? 'block' : 'none';
+        this.value === 'Stripe' ? 'block' : 'none';
 });
 </script>
 

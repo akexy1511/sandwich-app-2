@@ -2,9 +2,14 @@
 include 'includes/database.php';
 include 'includes/auth.php';
 
+if (!isset($_POST['id_commande']) || !isset($_POST['payment_method'])) {
+    header("Location: commandes.php");
+    exit;
+}
+
 $cmd = intval($_POST['id_commande']);
 $user_id = $_SESSION['user_id'];
-$method = $_POST['payment_method'] ?? "";
+$method = $_POST['payment_method'];
 
 // Vérifier commande
 $stmt = $conn->prepare("SELECT * FROM commandes WHERE id_commande = ? AND id_utilisateur = ?");
@@ -22,16 +27,26 @@ $data = json_decode(file_get_contents("sandwiches.json"), true);
 $key = strtolower($order['nom']);
 $amount = $data[$key]['price'] ?? 5;
 
-// Vérification CB
-if ($method === "card") {
-    if (empty($_POST['card_number']) || empty($_POST['expiry_date']) || empty($_POST['cvv'])) {
-        $_SESSION['message'] = "Détails de carte incomplets.";
-        header("Location: paiement.php?id=" . $cmd);
-        exit;
-    }
+// Traiter selon la méthode de paiement
+if ($method === "Stripe") {
+    // Stripe est géré via Checkout - ne rien faire ici
+    // Le traitement se fait dans paiement-success.php
+    header("Location: paiement.php?id=" . $cmd);
+    exit;
+} elseif ($method === "Paypal") {
+    // TODO: Implémenter PayPal
+    $_SESSION['message'] = "Paiement PayPal pas encore implémenté.";
+    header("Location: paiement.php?id=" . $cmd);
+    exit;
+} elseif ($method === "Cash") {
+    // Paiement en espèces - enregistrer directement
+} else {
+    $_SESSION['message'] = "Méthode de paiement invalide.";
+    header("Location: paiement.php?id=" . $cmd);
+    exit;
 }
 
-// Enregistrer transaction
+// Enregistrer transaction pour Cash
 $stmt = $conn->prepare("
     INSERT INTO transaction (heure, montant, jour_, id_utilisateur)
     VALUES (?, ?, ?, ?)
@@ -53,6 +68,6 @@ $stmt = $conn->prepare("
 $stmt->bind_param("ii", $cmd, $transaction_id);
 $stmt->execute();
 
-$_SESSION['message'] = "Paiement effectué.";
+$_SESSION['message'] = "Paiement en espèces enregistré.";
 header("Location: commandes.php");
 exit;
