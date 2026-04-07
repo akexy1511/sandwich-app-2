@@ -1,5 +1,5 @@
 </div>
-<footer class="app-footer" style="position: fixed; bottom: 0; left: 0; width: 100%;">
+<footer class="app-footer">
     © CEPES 2026 — Cyril Libouton & Alexy Viatour
 </footer>
 
