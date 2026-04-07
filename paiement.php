@@ -53,10 +53,9 @@ $price = $data[$key]['price'] ?? 5.0;
             <label class="form-label">Méthode de paiement</label>
             <select class="form-control" name="payment_method" id="pmethod" required>
                 <option value="">Sélectionnez...</option>
-                <option value="card">Carte</option>
-                <option value="paypal">PayPal</option>
-                <option value="cash">Espèces</option>
-                <option value="bank">Virement</option>
+                <option value="Paypal">PayPal</option>
+                <option value="Cash">Espèces</option>
+                <option value="Stripe">Virement</option>
             </select>
         </div>
 
