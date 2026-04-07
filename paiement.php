@@ -55,7 +55,7 @@ $price = $data[$key]['price'] ?? 5.0;
                 <option value="">Sélectionnez...</option>
                 <option value="Paypal">PayPal</option>
                 <option value="Cash">Espèces</option>
-                <option value="Stripe">Virement</option>
+                <option value="Stripe">Stripe</option>
             </select>
         </div>
 
