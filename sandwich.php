@@ -23,7 +23,7 @@ if (!isset($sandwiches[$name])) {
 $sandwich = $sandwiches[$name];
 
 // Gestion des jours disponibles
-$joursSem = ['Lundi' => 'Monday', 'Mardi' => 'Tuesday', 'Mercredi' => 'Wednesday', 'Jeudi' => 'Thursday', 'Vendredi' => 'Friday'];
+$joursSem = ['Lundi' => 'Monday', 'Mardi' => 'Tuesday', 'Jeudi' => 'Thursday', 'Vendredi' => 'Friday'];
 $aujourdhui = new DateTime();
 $limit_heure = new DateTime("11:20");
 
