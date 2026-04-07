@@ -16,4 +16,4 @@ $stmt->execute();
 
 header("Location: commandes.php");
 exit;
-``
+?>
