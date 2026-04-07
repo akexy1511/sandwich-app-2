@@ -31,6 +31,13 @@ $price = $data[$key]['price'] ?? 5.0;
 
 // Si paiement Stripe sélectionné, créer session Stripe Checkout
 if (isset($_POST['payment_method']) && $_POST['payment_method'] === 'Stripe') {
+    // Vérifier que les clés Stripe sont configurées
+    if (STRIPE_SECRET_KEY === 'sk_test_your_secret_key_here' || STRIPE_PUBLISHABLE_KEY === 'pk_test_your_publishable_key_here') {
+        $_SESSION['message'] = "Erreur: Les clés Stripe ne sont pas configurées. Veuillez modifier includes/stripe_config.php avec vos vraies clés API.";
+        header("Location: paiement.php?id=" . $id);
+        exit;
+    }
+
     require_once 'vendor/autoload.php';
 
     \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
@@ -61,7 +68,7 @@ if (isset($_POST['payment_method']) && $_POST['payment_method'] === 'Stripe') {
         header("Location: " . $checkout_session->url);
         exit;
     } catch (Exception $e) {
-        $_SESSION['message'] = "Erreur lors de la création du paiement: " . $e->getMessage();
+        $_SESSION['message'] = "Erreur Stripe: " . $e->getMessage() . ". Vérifiez que vos clés API sont correctement configurées.";
         header("Location: paiement.php?id=" . $id);
         exit;
     }
